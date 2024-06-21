@@ -13,7 +13,8 @@ import tacos.Taco;
 import tacos.TacoOrder;
 import tacos.data.IngredientRepository;
 
-import java.util.Iterator;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Controller
@@ -63,10 +64,8 @@ public class DesignTacoController {
     }
 
     private Iterable<Ingredient> filterByType(Iterable<Ingredient> ingredients, Type type) {
-        Iterator<Ingredient> iterator = ingredients.iterator();
-        if (iterator.hasNext() && iterator.next().getType().equals(type)) {
-            iterator.remove();
-        }
-        return ingredients;
+        return StreamSupport.stream(ingredients.spliterator(), false)
+                .filter(i -> i.getType().equals(type))
+                .collect(Collectors.toList());
     }
 }
